@@ -1,6 +1,6 @@
 pragma solidity ^0.8.0;
 
-import './ERC20/IERC20.sol';
+import '@openzeppelin/contracts/token/ERC20/presets/ERC20PresetFixedSupply.sol';
 
 contract Staking {
     uint constant MULTIPLIER = 10000;
@@ -49,7 +49,7 @@ contract Staking {
         require(_token.transferFrom(msg.sender, address(this), _amount), "Token transfer failed");
 
         uint256 reward;
-        uint256 totalDistributed = 0;
+        uint256 totalDistributed;
         uint256 amountToDistribute = _amount + leftovers;
 
         for (uint i = 0; i < stakers.length; i++) {
