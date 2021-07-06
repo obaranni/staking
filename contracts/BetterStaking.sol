@@ -4,7 +4,6 @@ import '@openzeppelin/contracts/token/ERC20/presets/ERC20PresetFixedSupply.sol';
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 contract BetterStaking is ReentrancyGuard {
-    uint256 constant MULTIPLIER = 10000;
     IERC20 private immutable _token;
 
     uint256 public totalStaked;
@@ -67,6 +66,7 @@ contract BetterStaking is ReentrancyGuard {
 
     function distributeReward(uint256 reward) public nonReentrant {
         require(totalStaked > 0, "Pool with 0 stake");
+        require(reward % totalStaked == 0, "The reward must be a multiple of the frozen funds");
         require(_token.transferFrom(msg.sender, address(this), reward), "Token transfer failed");
 
         rewardPerToken = rewardPerToken + reward / totalStaked;

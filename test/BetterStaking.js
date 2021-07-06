@@ -206,45 +206,46 @@ contract("BetterStaking", async accounts => {
         await StakingInstance.stake(449, {from: accounts[5]});
         await StakingInstance.stake(10000, {from: accounts[6]});
 
-        await ERC20TokenInstance.approve(StakingInstance.address, 100_000, {from: accounts[0]});
+        await ERC20TokenInstance.approve(StakingInstance.address, 108_000, {from: accounts[0]});
         expectEvent(await StakingInstance.distributeReward(
-            100_000,
+            108_000,
             {from: accounts[0]}
         ), 'Distributed', {
-            amount: new BN(100_000),
+            amount: new BN(108_000),
         });
     });
 
     it("Claime reward", async () => {
-        expectEvent(await StakingInstance.claimReward({from: accounts[1]}), 'RewardClaimed', {amount: new BN(2700)});
-        expectEvent(await StakingInstance.claimReward({from: accounts[3]}), 'RewardClaimed', {amount: new BN(450)});
-        expectEvent(await StakingInstance.claimReward({from: accounts[4]}), 'RewardClaimed', {amount: new BN(9)});
-        expectEvent(await StakingInstance.claimReward({from: accounts[5]}), 'RewardClaimed', {amount: new BN(4041)});
+        expectEvent(await StakingInstance.claimReward({from: accounts[1]}), 'RewardClaimed', {amount: new BN(3000)});
+        expectEvent(await StakingInstance.claimReward({from: accounts[3]}), 'RewardClaimed', {amount: new BN(500)});
+        expectEvent(await StakingInstance.claimReward({from: accounts[4]}), 'RewardClaimed', {amount: new BN(10)});
+        expectEvent(await StakingInstance.claimReward({from: accounts[5]}), 'RewardClaimed', {amount: new BN(4490)});
 
         await StakingInstance.unstake(300, {from: accounts[1]});
         await StakingInstance.unstake(50, {from: accounts[3]});
         await StakingInstance.unstake(1, {from: accounts[4]});
         await StakingInstance.unstake(449, {from: accounts[5]});
 
-        expect((await ERC20TokenInstance.balanceOf(accounts[1])).toNumber()).equals(3300);
+        expect((await ERC20TokenInstance.balanceOf(accounts[1])).toNumber()).equals(3600);
         expect((await ERC20TokenInstance.balanceOf(accounts[2])).toNumber()).equals(5000);
-        expect((await ERC20TokenInstance.balanceOf(accounts[3])).toNumber()).equals(500);
-        expect((await ERC20TokenInstance.balanceOf(accounts[4])).toNumber()).equals(10);
-        expect((await ERC20TokenInstance.balanceOf(accounts[5])).toNumber()).equals(4490);
+        expect((await ERC20TokenInstance.balanceOf(accounts[3])).toNumber()).equals(550);
+        expect((await ERC20TokenInstance.balanceOf(accounts[4])).toNumber()).equals(11);
+        expect((await ERC20TokenInstance.balanceOf(accounts[5])).toNumber()).equals(4939);
     });
 
     it("Claime after next distribution", async () => {
-        await ERC20TokenInstance.approve(StakingInstance.address, 50_000, {from: accounts[0]});
+        await ERC20TokenInstance.approve(StakingInstance.address, 20_000, {from: accounts[0]});
         expectEvent(await StakingInstance.distributeReward(
-            50_000,
+            20_000,
             {from: accounts[0]}
         ), 'Distributed', {
-            amount: new BN(50_000),
+            amount: new BN(20_000),
         });
-        expectEvent(await StakingInstance.claimReward({from: accounts[6]}), 'RewardClaimed', {amount: new BN(140_000)});
+        expectEvent(await StakingInstance.claimReward({from: accounts[6]}), 'RewardClaimed', {amount: new BN(120_000)});
         
         await StakingInstance.unstake(10000, {from: accounts[6]});
 
-        expect((await ERC20TokenInstance.balanceOf(accounts[6])).toNumber()).equals(150000);
+        expect((await ERC20TokenInstance.balanceOf(accounts[6])).toNumber()).equals(130_000);
+        expect((await ERC20TokenInstance.balanceOf(StakingInstance.address)).toNumber()).equals(0);
     });
 });
