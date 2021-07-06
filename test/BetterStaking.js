@@ -30,7 +30,7 @@ contract("BetterStaking", async accounts => {
         expect((await StakingInstance.rewardPerToken()).toNumber()).equal(0);
     });
 
-    it("Stake without bad amount should fail", async () => {
+    it("Stake with bad amount should fail", async () => {
         await expectRevert(
             StakingInstance.stake(
                 0,
